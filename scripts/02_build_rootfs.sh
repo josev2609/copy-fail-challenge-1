@@ -36,6 +36,10 @@ make -j"$JOBS" 2>&1 | tail -3
 echo -e "${CYAN}[4/6] Instalando BusyBox en el initramfs...${NC}"
 mkdir -p "$INITRAMFS_DIR"
 make CONFIG_PREFIX="$INITRAMFS_DIR" install
+ln -sf busybox "$INITRAMFS_DIR/bin/sh"
+ln -sf busybox "$INITRAMFS_DIR/bin/mount"
+ln -sf busybox "$INITRAMFS_DIR/bin/su"
+ln -sf busybox "$INITRAMFS_DIR/bin/ls"
 
 # ── Estructura mínima del sistema de archivos ──────────────────────────────────
 mkdir -p "$INITRAMFS_DIR"/{proc,sys,dev,tmp,etc,root,home/student,usr/bin,run}
@@ -63,8 +67,6 @@ student:x:1001:1001:student:/home/student:/bin/sh
 EOF
 
 cat > "$INITRAMFS_DIR/etc/shadow" << 'EOF'
-root::19000:0:99999:7:::
-student:$6$salt$hashedpassword:19000:0:99999:7:::
 EOF
 
 cat > "$INITRAMFS_DIR/etc/group" << 'EOF'
